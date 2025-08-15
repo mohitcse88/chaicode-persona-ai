@@ -5,6 +5,7 @@ function Input() {
   const [formData, setFormData] = useState({ name: "hitesh", message: "" });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [outputData, setOutputData] = useState("");
 
   async function handleSubmit(e) {
     try {
@@ -14,16 +15,22 @@ function Input() {
 
       const res = await fetch(`${API_URL}/${formData.name}`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           message: formData.message,
         }),
       });
-      console.log(res);
-      // console.log(await res.json());
+
+      const data = await res.json();
+      setOutputData(data);
+      setLoading(false);
     } catch (error) {}
   }
   return (
     <div>
+      {outputData && <div> {outputData.data} </div>}
       <form onSubmit={handleSubmit}>
         <div className="border w-[70vw] mx-auto flex justify-between rounded-lg">
           <select
@@ -45,7 +52,9 @@ function Input() {
               setFormData(() => ({ ...formData, message: e.target.value }));
             }}
           />
-          <button className="border px-3 py-1 rounded">Chat</button>
+          <button className="border px-3 py-1 rounded" disabled={loading}>
+            Chat
+          </button>
         </div>
       </form>
     </div>

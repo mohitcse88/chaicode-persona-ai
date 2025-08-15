@@ -7,10 +7,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_URL,
+  })
+);
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 const openai = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -51,10 +55,10 @@ app.post("/hitesh", async (req, res) => {
     ],
   });
 
-  const outputText = response.choices[0].message;
+  const data = response.choices[0].message.content;
 
   res.status(200).json({
-    outputText,
+    data,
   });
 });
 
@@ -79,10 +83,10 @@ app.post("/piyush", async (req, res) => {
     ],
   });
 
-  const outputText = response.choices[0].message;
+  const data = response.choices[0].message.content;
 
   res.status(200).json({
-    outputText,
+    data,
   });
 });
 
