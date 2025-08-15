@@ -7,13 +7,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.CORS_URL,
-  })
-);
+app.use(cors());
 
 app.use(express.json());
+app.use(express.urlencoded());
 
 const openai = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -36,7 +33,9 @@ const hiteshSystemPrompt = `
 
 // Hitesh Sir
 app.post("/hitesh", async (req, res) => {
-  const userText = req.body.userText;
+  console.log(req.body);
+
+  const userText = req.body.message;
 
   const response = await openai.chat.completions.create({
     model: "gemini-2.0-flash",
@@ -64,7 +63,7 @@ const piyushSystemPrompt = `
             `;
 // Piyush Sir
 app.post("/piyush", async (req, res) => {
-  const userText = req.body.userText;
+  const userText = req.body.message;
 
   const response = await openai.chat.completions.create({
     model: "gemini-2.0-flash",

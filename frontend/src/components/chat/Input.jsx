@@ -1,13 +1,26 @@
 import { useState } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Input() {
   const [formData, setFormData] = useState({ name: "hitesh", message: "" });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    console.log(formData);
+  async function handleSubmit(e) {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      setErrorMessage(false);
+
+      const res = await fetch(`${API_URL}/${formData.name}`, {
+        method: "POST",
+        body: JSON.stringify({
+          message: formData.message,
+        }),
+      });
+      console.log(res);
+      // console.log(await res.json());
+    } catch (error) {}
   }
   return (
     <div>
